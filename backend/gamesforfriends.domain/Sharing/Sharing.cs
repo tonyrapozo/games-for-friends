@@ -1,6 +1,5 @@
 namespace gamesforfriends.domain.Sharing
 {
-    using System.Collections.Generic;
     using gamesforfriends.domain.Helper;
     using gamesforfriends.domain.User;
 
@@ -14,35 +13,35 @@ namespace gamesforfriends.domain.Sharing
 
         public static Sharing newSharing(string sharingId) => new Sharing(sharingId);
 
-        public string UserId { get; private set; }
-        public Sharing fromUser(string userId)
+        public Identifier User { get; protected set; }
+        public Sharing fromUser(User user)
         {
-            this.UserId = userId;
+            this.User = new Identifier(user.Id);
             return this;
         }
 
-        public string FriendId { get; private set; }
-        public Sharing toFriend(string friendId)
+        public Friend Friend { get; protected set; }
+        public Sharing toFriend(Friend friend)
         {
-            this.FriendId = friendId;
+            this.Friend = friend;
             return this;
         }
 
-        public string GameId { get; private set; }
-        public Sharing thisGame(string gameId)
+        public Game Game { get; protected set; }
+        public Sharing thisGame(Game game)
         {
-            this.GameId = gameId;
+            this.Game = game;
             return this;
         }
 
-        public System.DateTime SharingDate { get; private set; }
+        public System.DateTime SharingDate { get; protected set; }
         public Sharing at(System.DateTime sharingDate)
         {
             this.SharingDate = sharingDate;
             return this;
         }
 
-        public System.DateTime? ReturnDate { get; private set; }
+        public System.DateTime? ReturnDate { get; protected set; }
         public Sharing returnedAt(System.DateTime? returnDate)
         {
             this.ReturnDate = returnDate;

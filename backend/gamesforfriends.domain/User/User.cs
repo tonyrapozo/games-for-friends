@@ -25,25 +25,25 @@ namespace gamesforfriends.domain.User
             return new User(userId);
         }
 
-        public string Name { get; internal set; }
+        public string Name { get; protected set; }
         public User called(string name){
             this.Name = name;
             return this;
         }
 
-        public string Email { get; internal set; }
+        public string Email { get; protected set; }
         public User withEmail(string email){
             this.Email = email;
             return this;
         }
 
-        public string Password { get; internal set; }
+        public string Password { get; protected set; }
         public User withPassword(string password){
             this.Password = password;
             return this;
         }
 
-        public List<Friend> Friends { get; private set; }
+        public List<Friend> Friends { get; protected set; }
         public User newFriend(Friend friend)
         {
             if (Friends.Find(item => item.Id == friend.Id) != null)
@@ -62,7 +62,7 @@ namespace gamesforfriends.domain.User
             return this;
         }
 
-        public List<Game> Games { get; private set; }
+        public List<Game> Games { get; protected set; }
         public User newGame(Game game)
         {
             if (Games.Find(item => item.Id == game.Id) != null)

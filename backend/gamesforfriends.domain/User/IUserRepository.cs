@@ -1,13 +1,13 @@
 namespace gamesforfriends.domain.User
 {
-    using System.Collections.Generic;
     using gamesforfriends.domain.Helper;
 
     public interface IUserRepository
     {
         User GetUser(Identifier userId);
-        User AddUser(User user);
-        User Update(User user);
-        User RemoveUser(Identifier userId);
+        User GetUserByEmail(string email);
+        void AddUser(User user);
+        void Update(User user);
+        void RemoveUser(Identifier userId);
     }
 }

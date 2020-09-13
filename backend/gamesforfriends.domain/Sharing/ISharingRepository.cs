@@ -6,6 +6,6 @@ namespace gamesforfriends.domain.Sharing
     {
         List<Sharing> GetActiveSharings(Identifier userId);
         Sharing GetShareById(Identifier shareId);
-        Sharing SaveSharing(Sharing sharing);
+        void SaveSharing(Sharing sharing);
     }
 }

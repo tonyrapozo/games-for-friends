@@ -28,15 +28,15 @@ namespace gamesforfriends.domain.tests
             var game = Game.newGame("c635e7de-06cb-44f6-87c6-7bc6bdeb3f80");
             var friend = Friend.newFriend("f204c0e0-8ecc-4212-938a-125bfd5de832");
             var sharing = Sharing.Sharing.newSharing()
-                                         .fromUser(user.Id)
-                                         .toFriend(friend.Id)
-                                         .thisGame(game.Id)
+                                         .fromUser(user)
+                                         .toFriend(friend)
+                                         .thisGame(game)
                                          .at(DateTime.Parse("2020/09/10"))
                                          .returnedAt(DateTime.Parse("2020/09/13"));
 
-            Assert.Equal("6499b712-2bac-4e05-9f53-9dd84bfe0a13", sharing.UserId);
-            Assert.Equal("c635e7de-06cb-44f6-87c6-7bc6bdeb3f80", sharing.GameId);
-            Assert.Equal("f204c0e0-8ecc-4212-938a-125bfd5de832", sharing.FriendId);
+            Assert.Equal("6499b712-2bac-4e05-9f53-9dd84bfe0a13", sharing.User.Id);
+            Assert.Equal("c635e7de-06cb-44f6-87c6-7bc6bdeb3f80", sharing.Game.Id);
+            Assert.Equal("f204c0e0-8ecc-4212-938a-125bfd5de832", sharing.Friend.Id);
             Assert.Equal(DateTime.Parse("2020/09/10"), sharing.SharingDate);
             Assert.Equal(DateTime.Parse("2020/09/13"), sharing.ReturnDate);
         }

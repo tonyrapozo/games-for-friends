@@ -11,13 +11,13 @@ namespace gamesforfriends.domain.User
 
         public static Game newGame(string gameId) => new Game(gameId);
 
-        public string UserId { get; private set; }
+        public string UserId { get; protected set; }
         public Game belongsTo(User user) {
             this.UserId = user.Id;
             return this;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
         public Game called(string name) {
             this.Name = name;
             return this;

@@ -1,5 +1,6 @@
 namespace gamesforfriends.domain.User
 {
+    using System;
     using gamesforfriends.domain.Helper;
     public class Friend : Identifier
     {
@@ -8,20 +9,20 @@ namespace gamesforfriends.domain.User
         public static Friend newFriend() => new Friend();
         public static Friend newFriend(string friendId) => new Friend(friendId);
 
-        public string UserId { get; private set; }
+        public string UserId { get; protected set; }
         public Friend friendOf(User user) {
             this.UserId = user.Id;
             return this;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
         public Friend called(string name) {
             this.Name = name;
             return this;
         }
 
-        public System.DateTime FriendshipDate { get; private set; }
-        public Friend friendsSince(System.DateTime date) {
+        public DateTime FriendshipDate { get; protected set; }
+        public Friend friendsSince(DateTime date) {
             this.FriendshipDate = date;
             return this;
         }

@@ -3,21 +3,29 @@ namespace gamesforfriends.infra.repositories
     using gamesforfriends.domain.Sharing;
     using gamesforfriends.domain.Helper;
     using System.Collections.Generic;
+    using MongoDB.Driver;
 
     public class SharingRepository : ISharingRepository
     {
-        public Sharing SaveSharing(Sharing sharing)
+        private IMongoCollection<Sharing> collection;
+        public SharingRepository(IMongoDatabase mongoDatabase)
         {
-            return sharing;
+            collection = mongoDatabase.GetCollection<Sharing>("Sharing");
         }
 
-        public Sharing GetShareById(Identifier shareId){
-            return null;
+        public void SaveSharing(Sharing sharing)
+        {
+            collection.InsertOne(sharing);
+        }
+
+        public Sharing GetShareById(Identifier shareId)
+        {
+            return collection.Find(sharing => sharing.Id == shareId.Id).FirstOrDefault();
         }
 
         public List<Sharing> GetActiveSharings(Identifier userId)
         {
-            return null;
+            return collection.Find(sharing => sharing.User.Id == userId.Id && sharing.ReturnDate == null).ToList();
         }
     }
 }

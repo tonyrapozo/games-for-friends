@@ -1,29 +1,40 @@
 ﻿namespace gamesforfriends.infra.repositories
 {
-    using System;
     using gamesforfriends.domain.User;
     using gamesforfriends.domain.Helper;
+    using MongoDB.Driver;
 
     public class UserRepository : IUserRepository
     {
+        private IMongoCollection<User> collection;
+        public UserRepository(IMongoDatabase mongoDatabase)
+        {
+            this.collection = mongoDatabase.GetCollection<User>("User");
+        }
+
         public User GetUser(Identifier userId)
         {
-            return User.newUser();
+            return collection.Find(filter => filter.Id == userId.Id).FirstOrDefault();
         }
 
-        public User AddUser(User user)
+        public User GetUserByEmail(string email)
         {
-            return User.newUser();
+            return collection.Find(filter => filter.Email == email).FirstOrDefault();
         }
 
-        public User Update(User user)
+        public void AddUser(User user)
         {
-            return User.newUser();
+            collection.InsertOneAsync(user).Wait();
         }
 
-        public User RemoveUser(Identifier userId)
+        public void Update(User user)
         {
-            return User.newUser();
+            collection.ReplaceOne(filter => filter.Id == user.Id, user);
+        }
+
+        public void RemoveUser(Identifier userId)
+        {
+            collection.DeleteOne(filter => filter.Id == userId.Id);
         }
     }
 }

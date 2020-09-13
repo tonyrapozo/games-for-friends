@@ -1,21 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using gamesforfriends.domain.Sharing;
-using gamesforfriends.domain.User;
-using gamesforfriends.infra.repositories;
-
 namespace gamesforfriends.api
 {
+    using System;
+    using System.Text;    
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.IdentityModel.Tokens;
+    using System.IdentityModel.Tokens.Jwt;
+    using MongoDB.Driver;    
+    using gamesforfriends.domain.Sharing;
+    using gamesforfriends.domain.User;
+    using gamesforfriends.infra.repositories;
+    using gamesforfriends.api.Helper;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -28,9 +28,31 @@ namespace gamesforfriends.api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<ISharingRepository, SharingRepository>();
-            services.AddTransient<IAccountRepository, AccountRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IMongoDatabase>(_ => new MongoClient(Environment.GetEnvironmentVariable("ConnectionString")).GetDatabase("GFF"));
             services.AddControllers();
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services.AddAuthentication(x => {
+                        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    })
+                    .AddJwtBearer(token => {
+                        token.RequireHttpsMetadata = false;
+                        token.SaveToken = true;
+                        token.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = false,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Settings.Secret)),
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            RequireExpirationTime = true,
+                            ValidateLifetime = true,
+                            ClockSkew = TimeSpan.Zero,
+                        };
+                    });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -42,7 +64,11 @@ namespace gamesforfriends.api
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
+
+            app.UseCors(cors => cors.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build());
 
             app.UseEndpoints(endpoints =>
             {

@@ -2,43 +2,50 @@ namespace gamesforfriends.api.Controllers
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
+    using Microsoft.AspNetCore.Authorization;
     using gamesforfriends.domain.Sharing;
     using gamesforfriends.domain.Sharing.Dto;
+    using gamesforfriends.domain.User;
+    using gamesforfriends.api.Helper;
 
     [ApiController]
-    [Route("[controller]")]
-    public class SharingController : ControllerBase
+    [Route("sharings")]
+    [Authorize]
+    public class SharingController : BaseController
     {
         private readonly ISharingRepository sharingRepository;
-
-        public SharingController(ISharingRepository sharingRepository)
+        private readonly IUserRepository userRepository;
+        public SharingController(IUserRepository userRepository, ISharingRepository sharingRepository)
         {
+            this.userRepository = userRepository;
             this.sharingRepository = sharingRepository;
         }
 
-        [HttpPost("sharings")]
+        [HttpPost]
         public void NewShare([FromBody] SharingDto sharingDto)
         {
+            var user = userRepository.GetUser(base.GetUserId());
+            var friend = user.Friends.Find(friend => friend.Id == sharingDto.FriendId);
+            var game = user.Games.Find(game => game.Id == sharingDto.GameId);
+
             var sharing = Sharing.newSharing()
-                                 .fromUser(new domain.Helper.Identifier("1").Id)
-                                 .toFriend(sharingDto.FriendId)
-                                 .thisGame(sharingDto.GameId)
+                                 .fromUser(user)
+                                 .toFriend(friend)
+                                 .thisGame(game)
                                  .at(DateTime.Now)
                                  .returnedAt(null);
+
             sharingRepository.SaveSharing(sharing);
         }
 
-        [HttpGet("sharings")]
+        [HttpGet]
         public IEnumerable<Sharing> GetActiveSharings()
         {
-            return sharingRepository.GetActiveSharings(new domain.Helper.Identifier("1"));
+            return sharingRepository.GetActiveSharings(base.GetUserId());
         }
 
-        [HttpPut("sharings/return")]
+        [HttpPut("return")]
         public void ReturnShare([FromBody] SharingDto sharingDto)
         {
             var sharing = sharingRepository.GetShareById(new domain.Helper.Identifier(sharingDto.Id));
