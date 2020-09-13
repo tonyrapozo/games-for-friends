@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\gamesforfriends.domain\gamesforfriends.domain.csproj" />
+    <ProjectReference Include="..\gamesforfriends.infra\gamesforfriends.infra.csproj" />
+    <ProjectReference Include="..\gamesforfriends.infra.repositories\gamesforfriends.infra.repositories.csproj" />
+  </ItemGroup>
+
+</Project>
