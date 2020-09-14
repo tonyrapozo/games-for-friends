@@ -10,4 +10,4 @@ jobs:
     steps:
       - checkout
       - run: cd backend/; ls; pwd;
-      - run: dotnet build
+      - run: ls; pwd; dotnet build
