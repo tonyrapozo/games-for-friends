@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import api from '../../service';
+import Swal from 'sweetalert2'
 
 const NewSharing = (props) => {
 
@@ -25,13 +26,16 @@ const NewSharing = (props) => {
   }
 
   const salvar = async () => {
-    const data = await api.post('/sharings',
+    api.post('/sharings',
       {
         friendId: selectedFriend.id,
         gameId: selectedGame.id
-      });
-    if (data.status === 200)
-      toggle();
+      }).then((data) => {
+        if (data.status === 200)
+          toggle();
+      }).catch(() => {
+        Swal.fire('Atenção', 'Ocorreu um erro ao salvar o empréstimo! Por favor, tente novamente.', 'error')
+      });;
   };
 
   useEffect(() => {

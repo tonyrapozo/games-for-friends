@@ -5,6 +5,7 @@ import NewSharing from '../components/newSharing';
 import userIcon from "../assets/images/user-icon.png";
 import * as moment from 'moment';
 import api from '../service';
+import undrawVoid from "../assets/images/undraw/undraw_void_3ggu.svg";
 
 const Sharings = () => {
 
@@ -45,7 +46,7 @@ const Sharings = () => {
           <Button className="mt-3 float-right" color="purple" onClick={() => setOpenModal(true)}>novo empréstimo</Button>
         </Col>
       </Row>
-      {sharings.length === 0 ? <Undraw image="undraw_void_3ggu" description="Nenhum jogo emprestado" /> : <></>}
+      {sharings.length === 0 ? <Undraw image="undraw_void_3ggu" imageSrc={undrawVoid} description="Nenhum jogo emprestado" /> : <></>}
       {sharings.map((sharing, key) => {
         return (<Card className="bg-primary mt-3" key={key}>
           <CardBody>

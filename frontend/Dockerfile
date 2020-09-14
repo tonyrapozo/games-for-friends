@@ -3,7 +3,7 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm install react-scripts@3.4.3 -g --silent
+RUN npm install -g --silent
 COPY . ./
 RUN yarn build
 

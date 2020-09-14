@@ -13,7 +13,7 @@
             this.collection = mongoDatabase.GetCollection<User>("User");
         }
 
-        public User GetUser(Identifier userId)
+        public User GetUser(UserId userId)
         {
             return collection.Find(filter => filter.Id == userId.Id).FirstOrDefault();
         }
@@ -33,7 +33,7 @@
             collection.ReplaceOne(filter => filter.Id == user.Id, user);
         }
 
-        public void RemoveUser(Identifier userId)
+        public void RemoveUser(UserId userId)
         {
             collection.DeleteOne(filter => filter.Id == userId.Id);
         }

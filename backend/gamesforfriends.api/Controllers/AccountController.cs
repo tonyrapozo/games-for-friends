@@ -9,7 +9,6 @@ namespace gamesforfriends.api.Controllers
     using gamesforfriends.infra.Extensions;
     using gamesforfriends.domain.User.Dto;
 
-
     [ApiController]
     [Route("account")]
     [AllowAnonymous]
@@ -38,8 +37,8 @@ namespace gamesforfriends.api.Controllers
         {
             var user = userRepository.GetUserByEmail(userDto.Email);
             
-            if (user.Password != userDto.Password.Md5())
-                throw new Exception("Invalid user or password");
+            if (user == null || user.Password != userDto.Password.Md5())
+                return new ForbidResult();
 
             var token = AccountService.GenerateToken(user);
 

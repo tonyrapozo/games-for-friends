@@ -3,6 +3,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import AsyncSelect from 'react-select/async';
 import api from '../../service';
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 const NewGame = (props) => {
 
@@ -12,9 +13,12 @@ const NewGame = (props) => {
   const toggle = () => props.onCloseModal();
 
   const salvar = async () => {
-    const data = await api.post('/user/game', { name, image });
-    if (data.status === 200)
-      toggle();
+    api.post('/user/game', { name, image }).then((data) => {
+      if (data.status === 200)
+        toggle();
+    }).catch(() => {
+      Swal.fire('Atenção', 'Ocorreu um erro ao salvar o jogo! Por favor, tente novamente.', 'error')
+    });;
   };
 
   const promiseOptions = inputValue =>

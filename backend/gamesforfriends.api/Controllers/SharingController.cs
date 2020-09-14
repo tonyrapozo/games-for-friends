@@ -40,15 +40,16 @@ namespace gamesforfriends.api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Sharing> GetActiveSharings()
+        public IEnumerable<Sharing> GetActiveSharings([FromQuery] int page = 0, [FromQuery] int limit = 10)
         {
-            return sharingRepository.GetActiveSharings(base.GetUserId());
+            var activeSharings = sharingRepository.GetActiveSharings(base.GetUserId(), limit, page * limit);
+            return activeSharings;
         }
 
         [HttpDelete("return/{sharingId}")]
         public void ReturnShare(string sharingId)
         {
-            var sharing = sharingRepository.GetShareById(new domain.Helper.Identifier(sharingId));
+            var sharing = sharingRepository.GetShareById(new SharingId(sharingId));
             sharingRepository.UpdateSharing(sharing.returnedAt(DateTime.Now));
         }
     }

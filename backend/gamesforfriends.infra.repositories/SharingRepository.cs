@@ -1,9 +1,9 @@
 namespace gamesforfriends.infra.repositories
 {
     using gamesforfriends.domain.Sharing;
-    using gamesforfriends.domain.Helper;
     using System.Collections.Generic;
     using MongoDB.Driver;
+    using gamesforfriends.domain.User;
 
     public class SharingRepository : ISharingRepository
     {
@@ -23,14 +23,15 @@ namespace gamesforfriends.infra.repositories
             collection.ReplaceOne(item=>item.Id == sharing.Id, sharing);
         }
 
-        public Sharing GetShareById(Identifier shareId)
+        public Sharing GetShareById(SharingId shareId)
         {
             return collection.Find(sharing => sharing.Id == shareId.Id).FirstOrDefault();
         }
-
-        public List<Sharing> GetActiveSharings(Identifier userId)
+        public List<Sharing> GetActiveSharings(UserId userId, int limit, int offset)
         {
-            return collection.Find(sharing => sharing.User.Id == userId.Id && sharing.ReturnDate == null).ToList();
+            return collection.Find(sharing => sharing.User.Id == userId.Id && sharing.ReturnDate == null)
+                             .Skip(offset)
+                             .Limit(limit).ToList();
         }
     }
 }

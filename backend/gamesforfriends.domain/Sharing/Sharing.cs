@@ -13,12 +13,12 @@ namespace gamesforfriends.domain.Sharing
 
         public static Sharing newSharing(string sharingId) => new Sharing(sharingId);
 
-        public Identifier User { get; protected set; }
+        public UserId User { get; protected set; }
         public Sharing fromUser(User user)
         {
             if (user == null)
                 throw new System.ArgumentException("Object user cannot be null");
-            User = new Identifier(user.Id);
+            User = new UserId(user.Id);
             return this;
         }
 

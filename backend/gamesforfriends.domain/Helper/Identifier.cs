@@ -2,7 +2,7 @@ namespace gamesforfriends.domain.Helper
 {
     using System;
     
-    public class Identifier
+    public abstract class Identifier
     {
         public string Id { get; set; }
 
@@ -13,7 +13,8 @@ namespace gamesforfriends.domain.Helper
                 Id = Guid.NewGuid().ToString();
         }
 
-        public Identifier(){
+        public Identifier()
+        {
             Id = Guid.NewGuid().ToString();
         }
     }

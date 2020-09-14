@@ -4,10 +4,10 @@ namespace gamesforfriends.domain.User
 
     public interface IUserRepository
     {
-        User GetUser(Identifier userId);
+        User GetUser(UserId userId);
         User GetUserByEmail(string email);
         void AddUser(User user);
         void Update(User user);
-        void RemoveUser(Identifier userId);
+        void RemoveUser(UserId userId);
     }
 }

@@ -11,7 +11,8 @@ const instance = axios.create({
 instance.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
-  if (401 === error.response.status) {
+  debugger;
+  if (error && error.response && 401 === error.response.status) {
     localStorage.setItem('token', '');
     window.location = '/login';
   } else {

@@ -29,8 +29,13 @@ const Friends = () => {
     }
   }
 
-  const editUser = async (friend) => {
+  const editFriend = async (friend) => {
     setFriend(friend);
+    setOpenModal(true);
+  }
+
+  const newFriend = () => {
+    setFriend({});
     setOpenModal(true);
   }
 
@@ -46,7 +51,7 @@ const Friends = () => {
           <h5>Sua lista de amigos para compartilhar jogos</h5>
         </Col>
         <Col sm="4">
-          <Button className="mt-3 float-right" color="purple" onClick={() => setOpenModal(true)}>novo amigo</Button>
+          <Button className="mt-3 float-right" color="purple" onClick={() => newFriend()}>novo amigo</Button>
         </Col>
       </Row>
       <Row>
@@ -70,7 +75,7 @@ const Friends = () => {
                   </td>
                   <td>
                     <ButtonGroup className="pull-right">
-                      <Button onClick={() => editUser(friend)}>editar</Button>
+                      <Button onClick={() => editFriend(friend)}>editar</Button>
                       <Button onClick={() => removeFriend(friend)}>remover</Button>
                     </ButtonGroup>
                   </td>

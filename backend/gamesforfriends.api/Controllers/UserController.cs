@@ -69,10 +69,10 @@
         }
 
         [HttpGet("games/free")]
-        public IEnumerable<Game> GetFreeGames()
+        public IEnumerable<Game> GetFreeGames([FromQuery] int page = 0, [FromQuery] int limit = 10)
         {
             var user = userRepository.GetUser(base.GetUserId());
-            var sharings = sharingRepository.GetActiveSharings(base.GetUserId());
+            var sharings = sharingRepository.GetActiveSharings(base.GetUserId(), limit, page * limit);
             return user.Games.Where(game => sharings.Find(sharing => sharing.Game.Id == game.Id) == null);
         }
 

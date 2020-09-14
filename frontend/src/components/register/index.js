@@ -3,6 +3,7 @@ import { Input, Row, Col, Label } from "reactstrap";
 import Undraw from "../undraw";
 import { useHistory } from "react-router-dom";
 import api from '../../service';
+import undrawAuth from "../../assets/images/undraw/undraw_my_password_d6kg.svg";
 
 const Register = () => {
   const history = useHistory();
@@ -25,7 +26,7 @@ const Register = () => {
   return (
 
     <div className="mt-4">
-      <Undraw image="undraw_authentication_fsn5" height='200px' />
+      <Undraw image="undraw_my_password_d6kg" imageSrc={undrawAuth} height='200px' />
       <Row>
         <Col sm={{ size: 4, offset: 4 }}>
 
