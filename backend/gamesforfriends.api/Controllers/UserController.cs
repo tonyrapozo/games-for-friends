@@ -7,6 +7,8 @@
     using gamesforfriends.domain.User;
     using gamesforfriends.domain.User.Dto;
     using gamesforfriends.api.Helper;
+    using gamesforfriends.domain.Sharing;
+    using System.Linq;
 
     [ApiController]
     [Route("user")]
@@ -14,9 +16,11 @@
     public class UserController : BaseController
     {
         private readonly IUserRepository userRepository;
-        public UserController(IUserRepository userRepository)
+        private readonly ISharingRepository sharingRepository;
+        public UserController(IUserRepository userRepository, ISharingRepository sharingRepository)
         {
             this.userRepository = userRepository;
+            this.sharingRepository = sharingRepository;
         }
 
         [HttpGet("friends")]
@@ -30,7 +34,7 @@
         public void AddFriend([FromBody] FriendDto friendDto)
         {
             var user = userRepository.GetUser(base.GetUserId());
-            var friend = Friend.newFriend(friendDto.Id)
+            var friend = Friend.newFriend()
                                .called(friendDto.Name)
                                .friendsSince(DateTime.Now)
                                .friendOf(user);
@@ -38,42 +42,57 @@
             userRepository.Update(user);
         }
 
-        [HttpDelete("friend")]
-        public void RemoveFriend([FromBody] FriendDto friendDto)
+        [HttpPut("friend")]
+        public void UpdateFriend([FromBody] FriendDto friendDto)
         {
             var user = userRepository.GetUser(base.GetUserId());
             var friend = Friend.newFriend(friendDto.Id)
-                               .called(friendDto.Name);
-            user.removeFriend(friend);
+                               .called(friendDto.Name)
+                               .friendOf(user);
+            user.updateFriendData(friend);
             userRepository.Update(user);
         }
 
+        [HttpDelete("friend/{friendId}")]
+        public void RemoveFriend(string friendId)
+        {
+            var user = userRepository.GetUser(base.GetUserId());
+            var friend = Friend.newFriend(friendId);
+            userRepository.Update(user.removeFriend(friend));
+        }
+
         [HttpGet("games")]
-        public IEnumerable<Game>  GetGames()
+        public IEnumerable<Game> GetGames()
         {
             var user = userRepository.GetUser(base.GetUserId());
             return user.Games;
         }
 
+        [HttpGet("games/free")]
+        public IEnumerable<Game> GetFreeGames()
+        {
+            var user = userRepository.GetUser(base.GetUserId());
+            var sharings = sharingRepository.GetActiveSharings(base.GetUserId());
+            return user.Games.Where(game => sharings.Find(sharing => sharing.Game.Id == game.Id) == null);
+        }
+
         [HttpPost("game")]
         public void AddGame([FromBody] GameDto gameDto)
         {
-            Console.WriteLine(gameDto.Name);
             var user = userRepository.GetUser(base.GetUserId());
             var game = Game.newGame()
-                           .called(gameDto.Name)    
+                           .called(gameDto.Name)   
+                           .withCoverImage(gameDto.Image) 
                            .belongsTo(user);
-            user.newGame(game);
-            userRepository.Update(user);
+            userRepository.Update(user.newGame(game));
         }
 
-        [HttpDelete("game")]
-        public void RemoveGame([FromBody] GameDto gameDto)
+        [HttpDelete("game/{gameid}")]
+        public void RemoveGame(string gameId)
         {
             var user = userRepository.GetUser(base.GetUserId());
-            var game = Game.newGame().called(gameDto.Name);
-            user.removeGame(game);
-            userRepository.Update(user);
+            var game = Game.newGame(gameId);
+            userRepository.Update(user.removeGame(game));
         }
     }
 }

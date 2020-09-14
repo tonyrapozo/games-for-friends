@@ -17,6 +17,12 @@ namespace gamesforfriends.domain.User
             return this;
         }
 
+        public string Image { get; protected set; }
+        public Game withCoverImage(string image) {
+            this.Image = image;
+            return this;
+        }
+
         public string Name { get; protected set; }
         public Game called(string name) {
             this.Name = name;

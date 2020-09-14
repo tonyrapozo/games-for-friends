@@ -18,6 +18,11 @@ namespace gamesforfriends.infra.repositories
             collection.InsertOne(sharing);
         }
 
+        public void UpdateSharing(Sharing sharing)
+        {
+            collection.ReplaceOne(item=>item.Id == sharing.Id, sharing);
+        }
+
         public Sharing GetShareById(Identifier shareId)
         {
             return collection.Find(sharing => sharing.Id == shareId.Id).FirstOrDefault();

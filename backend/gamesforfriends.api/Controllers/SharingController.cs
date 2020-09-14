@@ -45,11 +45,11 @@ namespace gamesforfriends.api.Controllers
             return sharingRepository.GetActiveSharings(base.GetUserId());
         }
 
-        [HttpPut("return")]
-        public void ReturnShare([FromBody] SharingDto sharingDto)
+        [HttpDelete("return/{sharingId}")]
+        public void ReturnShare(string sharingId)
         {
-            var sharing = sharingRepository.GetShareById(new domain.Helper.Identifier(sharingDto.Id));
-            sharingRepository.SaveSharing(sharing.returnedAt(DateTime.Now));
+            var sharing = sharingRepository.GetShareById(new domain.Helper.Identifier(sharingId));
+            sharingRepository.UpdateSharing(sharing.returnedAt(DateTime.Now));
         }
     }
 }

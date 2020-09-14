@@ -27,9 +27,11 @@ namespace gamesforfriends.api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             services.AddTransient<ISharingRepository, SharingRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IMongoDatabase>(_ => new MongoClient(Environment.GetEnvironmentVariable("ConnectionString")).GetDatabase("GFF"));
+            services.AddTransient<IMongoDatabase>(_ => new MongoClient(Environment.GetEnvironmentVariable("ConnectionString") ?? "mongodb://localhost:27017").GetDatabase("GFF"));
             services.AddControllers();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -52,7 +54,6 @@ namespace gamesforfriends.api
                             ClockSkew = TimeSpan.Zero,
                         };
                     });
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -64,11 +65,11 @@ namespace gamesforfriends.api
 
             app.UseRouting();
 
+            app.UseCors(cors => cors.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build());
+
             app.UseAuthentication();
 
             app.UseAuthorization();
-
-            app.UseCors(cors => cors.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build());
 
             app.UseEndpoints(endpoints =>
             {

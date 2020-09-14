@@ -7,14 +7,14 @@ namespace gamesforfriends.domain.User
     {
         protected User() : base() 
         {
-            this.Friends = new List<Friend>();
-            this.Games = new List<Game>();
+            Friends = new List<Friend>();
+            Games = new List<Game>();
         }
 
         protected User(string userId) : base(userId) 
         { 
-            this.Friends = new List<Friend>();
-            this.Games = new List<Game>();
+            Friends = new List<Friend>();
+            Games = new List<Game>();
         }
 
         public static User newUser(){
@@ -27,19 +27,19 @@ namespace gamesforfriends.domain.User
 
         public string Name { get; protected set; }
         public User called(string name){
-            this.Name = name;
+            Name = name;
             return this;
         }
 
         public string Email { get; protected set; }
         public User withEmail(string email){
-            this.Email = email;
+            Email = email;
             return this;
         }
 
         public string Password { get; protected set; }
         public User withPassword(string password){
-            this.Password = password;
+            Password = password;
             return this;
         }
 
@@ -50,15 +50,29 @@ namespace gamesforfriends.domain.User
                 throw new System.ArgumentException($@"{friend.Name} already is your friend.");
 
             friend.friendOf(this);
-            this.Friends.Add(friend);
+            Friends.Add(friend);
             return this;
         }
+
+        public User updateFriendData(Friend friend)
+        {
+            var myFriend = Friends.Find(item => item.Id == friend.Id);
+            if (Friends.Find(item => item.Id == friend.Id) == null)
+                throw new System.ArgumentException($@"The friend {friend.Name} with the id {friend.Id} is not your friend.");
+
+            myFriend.called(friend.Name);
+            Friends.RemoveAll(item => item.Id == myFriend.Id);
+            Friends.Add(myFriend);
+            return this;
+        }
+
         public User removeFriend(Friend friend)
         {
             if (Friends.Find(item => item.Id == friend.Id) == null)
                 throw new System.ArgumentException($@"The friend {friend.Name} with the id {friend.Id} is not your friend.");
 
-            this.Friends.Remove(friend);
+            Friends.RemoveAll(item=>item.Id == friend.Id);
+            
             return this;
         }
 
@@ -68,7 +82,7 @@ namespace gamesforfriends.domain.User
             if (Games.Find(item => item.Id == game.Id) != null)
                 throw new System.ArgumentException($@"You already have the game {game.Name} with id {game.Id}.");
 
-            this.Games.Add(game);
+            Games.Add(game);
             return this;
         }
         public User removeGame(Game game)
@@ -76,7 +90,7 @@ namespace gamesforfriends.domain.User
             if (Games.Find(item => item.Id == game.Id) == null)
                 throw new System.ArgumentException($@"The game {game.Name} with id {game.Id} does not belongs to your collection!");
 
-            this.Games.Remove(game);
+            Games.RemoveAll(item=>item.Id == game.Id);
             return this;
         }
     }

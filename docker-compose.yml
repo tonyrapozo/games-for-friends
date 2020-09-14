@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  mongo:
+    image: "mongo"
+    command: mongod --port 27018
+    ports:
+      - "27018:27018"
+    networks:
+      - app
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionString=mongodb://mongo:27018
+    ports:
+      - "5000:80"
+    networks:
+      - app
+    links:
+      - "mongo:mongo"
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - app
+networks:
+  app:
+    name: "app_network"

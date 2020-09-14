@@ -37,6 +37,7 @@ namespace gamesforfriends.api.Controllers
         public ActionResult<dynamic> Login([FromBody] UserDto userDto)
         {
             var user = userRepository.GetUserByEmail(userDto.Email);
+            
             if (user.Password != userDto.Password.Md5())
                 throw new Exception("Invalid user or password");
 

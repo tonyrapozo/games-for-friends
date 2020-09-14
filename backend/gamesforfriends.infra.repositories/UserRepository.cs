@@ -3,6 +3,7 @@
     using gamesforfriends.domain.User;
     using gamesforfriends.domain.Helper;
     using MongoDB.Driver;
+    using System;
 
     public class UserRepository : IUserRepository
     {
