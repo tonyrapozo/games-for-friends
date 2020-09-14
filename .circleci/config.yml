@@ -9,5 +9,4 @@ jobs:
 
     steps:
       - checkout
-      - run: cd backend/; ls; pwd;
-      - run: ls; pwd; dotnet build
+      - run: cd backend/; dotnet build
