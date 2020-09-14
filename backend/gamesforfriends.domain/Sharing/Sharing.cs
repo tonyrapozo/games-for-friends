@@ -16,21 +16,27 @@ namespace gamesforfriends.domain.Sharing
         public Identifier User { get; protected set; }
         public Sharing fromUser(User user)
         {
-            this.User = new Identifier(user.Id);
+            if (user == null)
+                throw new System.ArgumentException("Object user cannot be null");
+            User = new Identifier(user.Id);
             return this;
         }
 
         public Friend Friend { get; protected set; }
         public Sharing toFriend(Friend friend)
         {
-            this.Friend = friend;
+            if (friend == null)
+                throw new System.ArgumentException("Object friend cannot be null");
+            Friend = friend;
             return this;
         }
 
         public Game Game { get; protected set; }
         public Sharing thisGame(Game game)
         {
-            this.Game = game;
+            if (game == null)
+                throw new System.ArgumentException("Object game cannot be null");
+            Game = game;
             return this;
         }
 
